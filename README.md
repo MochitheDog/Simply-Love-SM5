@@ -4,10 +4,10 @@ This is a fork of the StepMania 5 theme, Simply Love v4.8.7, that adds a game mo
 # Current features:
 - Selectable DDR mode at game start that enables DDR-approximate timing windows as follows (in seconds):
   - Marvelous: 0.016667,
-	- Perfect: 0.033333,
-	- Great: 0.091667,
-	- Good: 0.141667,
-	- Boo (disabled by default): 0.225000
+  - Perfect: 0.033333,
+  - Great: 0.091667,
+  - Good: 0.141667,
+  - Boo (disabled by default): 0.225000
 - Judgments are renamed from ITG names to DDR names as seen above.
 - "Goods" count towards combo.
 - Scores earned in DDR mode are saved to a separate .xml file.

@@ -368,6 +368,9 @@ GetComboThreshold = function( MaintainOrContinue )
 		if SL.Global.GameMode=="FA+" then
 			ComboThresholdTable.dance.Maintain = "TapNoteScore_W4"
 			ComboThresholdTable.dance.Continue = "TapNoteScore_W4"
+		elseif SL.Global.GameMode=="DDR" then
+			ComboThresholdTable.dance.Maintain = "TapNoteScore_W5"
+			ComboThresholdTable.dance.Continue = "TapNoteScore_W5"
 		end
 	end
 
@@ -448,7 +451,9 @@ SetGameModePreferences = function()
 	-- so turn Decents and WayOffs off now.
 	if SL.Global.GameMode == "Casual" then
 		SL.Global.ActiveModifiers.TimingWindows = {true,true,true,false,false}
-
+	-- If DDR mode, turn off WayOffs (Boo's)
+	elseif SL.Global.GameMode == "DDR" then
+		SL.Global.ActiveModifiers.TimingWindows = {true,true,true,true,false}
 	-- Otherwise, we want all TimingWindows enabled by default.
 	else
  		SL.Global.ActiveModifiers.TimingWindows = {true,true,true,true,true}
@@ -484,7 +489,8 @@ SetGameModePreferences = function()
 	local prefix = {
 		ITG = "",
 		["FA+"] = "ECFA-",
-		Casual = "Casual-"
+		Casual = "Casual-",
+		DDR = "DDR",
 	}
 
 	if PROFILEMAN:GetStatsPrefix() ~= prefix[SL.Global.GameMode] then

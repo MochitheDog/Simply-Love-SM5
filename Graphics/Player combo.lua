@@ -16,6 +16,15 @@ colors.FullComboW2 = {color("#FDFFC9"), color("#FDDB85")} -- gold combo
 colors.FullComboW3 = {color("#C9FFC9"), color("#94FEC1")} -- green combo
 colors.FullComboW4 = {color("#FFFFFF"), color("#FFFFFF")} -- white combo
 
+-- combo colors used in DDR
+if SL.Global.GameMode == "DDR" then
+	colors.FullComboW1 = {color("#FFFFFF"), color("#D3D2C0")} -- white marv combo
+	colors.FullComboW2 = {color("#FDFFC9"), color("#FDDB85")} -- gold combo
+	colors.FullComboW3 = {color("#C9FFC9"), color("#94FEC1")} -- green combo
+	colors.FullComboW4 = {color("#C8FFFF"), color("#4EACF4")} -- blue combo 4EACF4
+	colors.FullComboW5 = {color("#FFFFFF"), color("#FFFFFF")} -- white combo
+end
+
 -- combo colors used in FA+
 if SL.Global.GameMode == "FA+" then
 	colors.FullComboW1 = {color("#C8FFFF"), color("#6BF0FF")} -- blue combo
@@ -90,6 +99,9 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 
 		elseif params.FullComboW4 then
 			self:effectcolor1(colors.FullComboW4[1]):effectcolor2(colors.FullComboW4[2])
+
+		elseif params.FullComboW5 then
+			self:effectcolor1(colors.FullComboW5[1]):effectcolor2(colors.FullComboW5[2])
 
 		elseif params.Combo then
 			self:stopeffect():diffuse( Color.White ) -- not a full combo; no effect, always just #ffffff

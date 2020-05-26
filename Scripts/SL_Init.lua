@@ -141,6 +141,14 @@ SL = {
 			color("#5b2b8e"),	-- purple
 			color("#ff0000")	-- red
 		},
+		DDR = {
+			color("#ffffff"),	-- white
+			color("#e29c18"),	-- gold F4DC00
+			color("#66c955"),	-- green
+			color("#3067F6"),	-- blue 09DFF7 3067F6
+			color("#E20FB1"),	-- boo purple E20FB1
+			color("#ff0000")	-- red
+		},
 	},
 	Preferences = {
 		Casual = {
@@ -201,6 +209,26 @@ SL = {
 			TimingWindowSecondsW5=0.135000,
 			TimingWindowSecondsHold=0.320000,
 			TimingWindowSecondsMine=0.065000,
+			TimingWindowSecondsRoll=0.350000,
+		},
+		DDR = {
+			TimingWindowAdd=0.0015,
+			RegenComboAfterMiss=5,
+			MaxRegenComboAfterMiss=10,
+			MinTNSToHideNotes="TapNoteScore_W4",
+			HarshHotLifePenalty=true,
+
+			PercentageScoring=true,
+			AllowW1="AllowW1_Everywhere",
+			SubSortByNumSteps=true,
+
+			TimingWindowSecondsW1=0.016667,
+			TimingWindowSecondsW2=0.033333,
+			TimingWindowSecondsW3=0.091667,
+			TimingWindowSecondsW4=0.141667,
+			TimingWindowSecondsW5=0.225000,
+			TimingWindowSecondsHold=0.320000,
+			TimingWindowSecondsMine=0.070000,
 			TimingWindowSecondsRoll=0.350000,
 		},
 	},
@@ -297,6 +325,37 @@ SL = {
 			LifePercentChangeLetGo=-0.08,
 			LifePercentChangeHeld=0.008,
 			LifePercentChangeHitMine=-0.05,
+		},
+		DDR = {
+			PercentScoreWeightW1=5,
+			PercentScoreWeightW2=4,
+			PercentScoreWeightW3=2,
+			PercentScoreWeightW4=0,
+			PercentScoreWeightW5=-6,
+			PercentScoreWeightMiss=-12,
+			PercentScoreWeightLetGo=0,
+			PercentScoreWeightHeld=5,
+			PercentScoreWeightHitMine=-6,
+
+			GradeWeightW1=5,
+			GradeWeightW2=4,
+			GradeWeightW3=2,
+			GradeWeightW4=0,
+			GradeWeightW5=-6,
+			GradeWeightMiss=-12,
+			GradeWeightLetGo=0,
+			GradeWeightHeld=5,
+			GradeWeightHitMine=-6,
+
+			LifePercentChangeW1=0.008,
+			LifePercentChangeW2=0.008,
+			LifePercentChangeW3=0.004,
+			LifePercentChangeW4=0.000,
+			LifePercentChangeW5=-0.050,
+			LifePercentChangeMiss=-0.100,
+			LifePercentChangeLetGo=IsGame("pump") and 0.000 or -0.080,
+			LifePercentChangeHeld=IsGame("pump") and 0.000 or 0.008,
+			LifePercentChangeHitMine=-0.050,
 		},
 	}
 }

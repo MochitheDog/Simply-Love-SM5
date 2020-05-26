@@ -14,6 +14,9 @@ This is a fork of the StepMania 5 theme, Simply Love v4.8.7, that adds a game mo
 
 Note: Life mechanics in DDR mode have not been changed from Simply Love's ITG settings.
 
+![DDR mode select](https://i.imgur.com/u32ZOLV.png)
+![DDR mode eval](https://i.imgur.com/ZXs5qSB.png)
+
 # Future features:
 - Add DDR letter grades and money score calculation.
 - Change life mechanics to better approximate DDR's life mechanics.

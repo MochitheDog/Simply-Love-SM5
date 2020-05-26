@@ -17,3 +17,6 @@ Note: Life mechanics in DDR mode have not been changed from Simply Love's ITG se
 # Future features:
 - Add DDR letter grades and money score calculation.
 - Change life mechanics to better approximate DDR's life mechanics.
+- Update other language files with new DDR mode strings
+
+Additional judgment graphics by zenius-i-vanisher user bLOOdSAW/HURG: https://zenius-i-vanisher.com/v5.2/thread?threadid=8936&page=1

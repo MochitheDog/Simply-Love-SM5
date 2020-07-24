@@ -1,5 +1,5 @@
 # About
-This is a fork of the StepMania 5 theme, Simply Love v4.8.7, that adds a game mode that attempts to simulate DDR mechanics.
+This is a fork of the StepMania 5 theme, Simply Love, that adds a game mode that attempts to simulate DDR mechanics.
 
 # Current features:
 - Selectable DDR mode at game start that enables DDR-approximate timing windows as follows (in seconds):
@@ -23,3 +23,4 @@ Note: Life mechanics in DDR mode have not been changed from Simply Love's ITG se
 - Update other language files with new DDR mode strings
 
 Additional judgment graphics by zenius-i-vanisher user bLOOdSAW/HURG: https://zenius-i-vanisher.com/v5.2/thread?threadid=8936&page=1
+# Simply Love (StepMania 5)

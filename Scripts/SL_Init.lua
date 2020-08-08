@@ -165,6 +165,14 @@ SL = {
 			color("#b45cff"),	-- purple (greatly lightened)
 			color("#ff3030")	-- red (slightly lightened)
 		},
+		DDR = {
+			color("#faf6d1"),	-- white
+			color("#e29c18"),	-- gold
+			color("#66c955"),	-- green
+			color("#21CCE8"),	-- blue
+			color("#b45cff"),	-- purple (greatly lightened)
+			color("#ff3030")	-- red (slightly lightened)
+		},
 	},
 	Preferences = {
 		Casual = {
@@ -223,6 +231,25 @@ SL = {
 			TimingWindowSecondsW3=0.043000,
 			TimingWindowSecondsW4=0.102000,
 			TimingWindowSecondsW5=0.135000,
+			TimingWindowSecondsHold=0.320000,
+			TimingWindowSecondsMine=0.065000,
+			TimingWindowSecondsRoll=0.350000,
+		},
+		DDR = {
+			TimingWindowAdd=0.0000,
+			RegenComboAfterMiss=5,
+			MaxRegenComboAfterMiss=10,
+			MinTNSToHideNotes="TapNoteScore_W4",
+			HarshHotLifePenalty=true,
+
+			PercentageScoring=true,
+			AllowW1="AllowW1_Everywhere",
+			SubSortByNumSteps=true,
+
+			TimingWindowSecondsW1=0.016667,
+			TimingWindowSecondsW2=0.033333,
+			TimingWindowSecondsW3=0.091666,
+			TimingWindowSecondsW4=0.141666,
 			TimingWindowSecondsHold=0.320000,
 			TimingWindowSecondsMine=0.065000,
 			TimingWindowSecondsRoll=0.350000,
@@ -292,6 +319,37 @@ SL = {
 			LifePercentChangeHitMine=-0.050,
 		},
 		["FA+"] = {
+			PercentScoreWeightW1=5,
+			PercentScoreWeightW2=5,
+			PercentScoreWeightW3=4,
+			PercentScoreWeightW4=2,
+			PercentScoreWeightW5=0,
+			PercentScoreWeightMiss=-12,
+			PercentScoreWeightLetGo=0,
+			PercentScoreWeightHeld=5,
+			PercentScoreWeightHitMine=-6,
+
+			GradeWeightW1=5,
+			GradeWeightW2=5,
+			GradeWeightW3=4,
+			GradeWeightW4=2,
+			GradeWeightW5=0,
+			GradeWeightMiss=-12,
+			GradeWeightLetGo=0,
+			GradeWeightHeld=5,
+			GradeWeightHitMine=-6,
+
+			LifePercentChangeW1=0.008,
+			LifePercentChangeW2=0.008,
+			LifePercentChangeW3=0.008,
+			LifePercentChangeW4=0.004,
+			LifePercentChangeW5=0,
+			LifePercentChangeMiss=-0.1,
+			LifePercentChangeLetGo=-0.08,
+			LifePercentChangeHeld=0.008,
+			LifePercentChangeHitMine=-0.05,
+		},
+		DDR = {
 			PercentScoreWeightW1=5,
 			PercentScoreWeightW2=5,
 			PercentScoreWeightW3=4,

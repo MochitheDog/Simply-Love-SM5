@@ -332,7 +332,7 @@ GetComboThreshold = function( MaintainOrContinue )
 
 
 	if CurrentGame ~= "para" then
-		if SL.Global.GameMode=="FA+" then
+		if SL.Global.GameMode=="FA+" or SL.Global.GameMode=="DDR" then
 			ComboThresholdTable.dance.Maintain = "TapNoteScore_W4"
 			ComboThresholdTable.dance.Continue = "TapNoteScore_W4"
 		end
@@ -491,6 +491,7 @@ SetGameModePreferences = function()
 	local prefix = {
 		ITG = "",
 		["FA+"] = "ECFA-",
+		DDR = "DDR",
 		Casual = "Casual-"
 	}
 
@@ -504,7 +505,7 @@ end
 -- manages for you back to their stock SM5 values.
 --
 -- These "managed" Preferences are listed in ./Scripts/SL_Init.lua
--- per-gamemode (Casual, ITG, FA+), and actively applied (and reapplied)
+-- per-gamemode (Casual, ITG, FA+, DDR), and actively applied (and reapplied)
 -- for each new game using SetGameModePreferences()
 --
 -- SL normally calls ResetPreferencesToStockSM5() from

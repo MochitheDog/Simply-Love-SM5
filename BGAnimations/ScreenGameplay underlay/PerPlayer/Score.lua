@@ -21,10 +21,21 @@ end
 
 local styletype = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 
-local pos = {
+-- DDRFIXME: removed local tag
+alpha = 0.00
+pos = {
 	[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=56 },
 	[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=56 },
 }
+
+if SL.Global.GameMode=="DDR" then
+	pos = {
+		[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=_screen.h-47 },
+		[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=_screen.h-47 },
+	}
+
+	alpha = 1.00
+end
 
 local dance_points, percent
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
@@ -49,7 +60,11 @@ local zoom_factor = clamp(scale(GetScreenAspectRatio(), 16/10, 16/9, ar_scale.si
 
 -- -----------------------------------------------------------------------
 
-return LoadFont("Wendy/_wendy monospace numbers")..{
+local af = Def.ActorFrame{}
+
+af[#af+1] = LoadActor("./ScoreBackground.lua", {alpha})
+
+af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 	Text="0.00",
 
 	Name=pn.."Score",
@@ -148,3 +163,5 @@ return LoadFont("Wendy/_wendy monospace numbers")..{
 		self:settext(percent)
 	end
 }
+
+return af

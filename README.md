@@ -1,10 +1,16 @@
-# Simply Love (StepMania 5)
+# Simply Love DDR Mod (StepMania 5)
 
 ![Arrow Logo](https://i.imgur.com/oZmxyGo.png)
 
+## TODO:
+* Turn off decents/way offs
+* DDR modifiers (beat bars, judgement behind arrows, etc.)
+* DDR fast/slow style
+* Various screen adjustments
+* SN2 tier scoring
+* DDR grading system (AAA, AA+, AA, AA-, A, etc.)
 
 ## About
-
 Simply Love is a StepMania 5 theme for the post-ITG community.
 
 It features a clean and simple design, offers numerous data-driven features not implemented by the StepMania 5 engine, and allows the current generation of ITG fans to breathe new life into the game they've known for over a decade.

@@ -57,7 +57,14 @@ return Def.ActorFrame{
 
 		sprite:visible(true):setstate(frame)
 		-- this should match the custom JudgmentTween() from SL for 3.95
-		sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		-- DDRFIXME: Ideally we could have one file for overrides (like DDR overrides) and then
+		-- 			 have it take care of this logic instead of inserting it into the graphics script...
+		--           might be difficult to maintain later?
+		if SL.Global.GameMode ~= "DDR" then
+			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		else
+			sprite:zoom(0.80625):linear(0.05):zoom(0.75):sleep(0.4):zoom(0)
+		end
 	end,
 
 	Def.Sprite{

@@ -159,7 +159,7 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 			end
 		end
 	end,
-	JudgmentMessageCommand=function(self, params)
+	JudgmentMessageCommand=function(self, params)	
 		if SL.Global.GameMode ~= "DDR" then
 			self:queuecommand("RedrawScore")
 		else
@@ -167,35 +167,14 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 			local w1 = pss:GetTapNoteScores('TapNoteScore_W1');
 			local w2 = pss:GetTapNoteScores('TapNoteScore_W2');
 			local w3 = pss:GetTapNoteScores('TapNoteScore_W3');
+			local w4 = pss:GetTapNoteScores('TapNoteScore_W4');
 			local hd = pss:GetHoldNoteScores('HoldNoteScore_Held');
 			local maxsteps = math.max(radar:GetValue('RadarCategory_TapsAndHolds')+radar:GetValue('RadarCategory_Holds')+radar:GetValue('RadarCategory_Rolls'),1);
-			pss:SetScore(math.round( (w1 + w2 + w3/2+hd)*100000/maxsteps-(w2 + w3))*10);
+			local sc = 1000000/maxsteps;
 
-			--wtf all these existing implementations are not working??? loool
+			SCREENMAN:SystemMessage(math.round((sc * (w1 + hd)) + ((sc - 10) * w2) + (((.6*sc) - 10) * w3) + (((.2*sc) - 10) * w4) ));
 
-			--local radarValues = GetDirectRadar(params.Player);
-			--local totalItems = GetTotalItems(radarValues);	
-			--local p = (params.Player == 'PlayerNumber_P1') and 1 or 2;
-			--local stepScore = string.format("%1.3f",(1000000/totalItems));
-			
-			--if pss:GetScore() == 0 then
-			--	tmp_Score[p] = 0;
-			--	score[p] = 0;
-			--end;
-
-			--if params.HoldNoteScore == 'HoldNoteScore_Held' then
-			--	add = stepScore;
-			--elseif (params.HoldNoteScore == 'HoldNoteScore_LetGo') then
-			--	add = 0;
-			--else
-			--	add = oneStepScore[params.TapNoteScore];
-			--end
-
-			--tmp_Score[p] = tmp_Score[p] + add;
-			--score[p] = math.min(round(tmp_Score[p],-1),1000000);
-			--pss:SetScore(score[p]);
-			--pss:SetScore(4000)
-			--pss:SetScore(add)
+			pss:SetScore(math.round((sc * (w1 + hd)) + ((sc - 10) * w2) + (((.6*sc) - 10) * w3) + (((.2*sc) - 10) * w4) ));
 			
 			self:settext(pss:GetScore());
 		end

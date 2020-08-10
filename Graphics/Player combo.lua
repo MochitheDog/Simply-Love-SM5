@@ -2,8 +2,8 @@ local player = Var "Player"
 local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 
--- lowest judge variable and animations for DDR mode
-local LowerJudge={0,0};
+-- DDR Variables
+local LowerJudge=0;
 local Pulse = THEME:GetMetric("Combo", "PulseCommand");
 local PulseLabel = THEME:GetMetric("Combo", "PulseLabelCommand");
 
@@ -13,6 +13,9 @@ local NumberMaxZoomAt = THEME:GetMetric("Combo", "NumberMaxZoomAt");
 
 local LabelMinZoom = THEME:GetMetric("Combo", "LabelMinZoom");
 local LabelMaxZoom = THEME:GetMetric("Combo", "LabelMaxZoom");
+
+local ZoomFactor = THEME:GetMetric("Combo", "ZoomFactor");
+-- end DDR Variables
 
 local available_fonts = GetComboFonts()
 local combo_font = (FindInTable(mods.ComboFont, available_fonts) ~= nil and mods.ComboFont) or available_fonts[1] or nil
@@ -35,15 +38,6 @@ if SL.Global.GameMode == "FA+" then
 	colors.FullComboW3 = {color("#FDFFC9"), color("#FDDB85")} -- gold combo
 	colors.FullComboW4 = {color("#C9FFC9"), color("#94FEC1")} -- green combo
 end
-
--- combo colors used in DDR
-if SL.Global.GameMode == "DDR" then
-	colors.FullComboW1 = {color("#FFFFFF"), color("#FFFEC7")} -- "white" combo
-	colors.FullComboW2 = {color("#FDFFC9"), color("#FDDB85")} -- gold combo
-	colors.FullComboW3 = {color("#C9FFC9"), color("#94FEC1")} -- green combo
-	colors.FullComboW4 = {color("#C9FFC9"), color("#94FEC1")} -- blue combo
-end
-
 
 local ShowComboAt = THEME:GetMetric("Combo", "ShowComboAt")
 
@@ -77,18 +71,18 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 	end,
 	JudgmentMessageCommand=function(self, params)
 		if params.Player ~= player then return end;
-		if params.TapNoteScore=='TapNoteScore_W1' and LowerJudge[p]<1 then
-			LowerJudge[p]=1;
-		elseif params.TapNoteScore=='TapNoteScore_W2' and LowerJudge[p]<2 then
-			LowerJudge[p]=2;
-		elseif params.TapNoteScore=='TapNoteScore_W3' and LowerJudge[p]<3 then
-			LowerJudge[p]=3;
-		elseif params.TapNoteScore=='TapNoteScore_W4' and LowerJudge[p]<4 then
-			LowerJudge[p]=4;
+		if params.TapNoteScore=='TapNoteScore_W1' and LowerJudge<1 then
+			LowerJudge=1;
+		elseif params.TapNoteScore=='TapNoteScore_W2' and LowerJudge<2 then
+			LowerJudge=2;
+		elseif params.TapNoteScore=='TapNoteScore_W3' and LowerJudge<3 then
+			LowerJudge=3;
+		elseif params.TapNoteScore=='TapNoteScore_W4' and LowerJudge<4 then
+			LowerJudge=4;
 		elseif params.TapNoteScore=='TapNoteScore_CheckpointMiss' 
 			or params.TapNoteScore=='TapNoteScore_W5' 
 			or params.TapNoteScore=='TapNoteScore_Miss' then
-			LowerJudge[p]=0;
+			LowerJudge=0;
 		end
 	end,
 	ComboCommand=function(self, params)
@@ -96,40 +90,97 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 		local iCombo = params.Combo;
 
 		if SL.Global.GameMode == "DDR" then
-			params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, NumberMinZoom, NumberMaxZoom );
-			params.Zoom = clamp( params.Zoom, NumberMinZoom, NumberMaxZoom );
-			params.LabelZoom = scale( iCombo, 0, 100, 0.8, 0.9 );
-			params.LabelZoom = clamp( params.LabelZoom, LabelMinZoom, 0.9);
+			params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, NumberMinZoom*ZoomFactor, NumberMaxZoom*ZoomFactor );
+			params.Zoom = clamp( params.Zoom, NumberMinZoom*ZoomFactor, NumberMaxZoom*ZoomFactor );
+			--params.LabelZoom = scale( iCombo, 0, 100, 0.8, 0.9 );
+			--params.LabelZoom = clamp( params.LabelZoom, LabelMinZoom, 0.9);
 
 			-- fancy (yet maybe also very distracting) animation
+			--local Number_X = -20;
+			--local Label_X = -13;
+			--local Label_Y = -42;
+	
+			--if iCombo < 10 then
+				--Number_X = 20;
+				--Label_X = -13;
+				--Label_Y = -44;
+			--end
+	
+			--if iCombo > 9 then
+				--Number_X = 8;
+				--Label_X = -4;
+				--Label_Y = -42;
+			--end
+
 			if iCombo > 99 then
-				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 1, 1 );
-				params.Zoom = clamp( params.Zoom, 1, 1 );
+				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 1*ZoomFactor, 1*ZoomFactor);
+				params.Zoom = clamp( params.Zoom, 1*ZoomFactor, 1*ZoomFactor);
+				--Number_X = -27;
+				--Label_X = 27;
+				--Label_Y = -36;
 			end
 	
 			if iCombo > 999 then
-				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 0.825, 0.825 );
-				params.Zoom = clamp( params.Zoom, 0.825, 0.825 );
+				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 0.825*ZoomFactor, 0.825)*ZoomFactor;
+				params.Zoom = clamp( params.Zoom, 0.825*ZoomFactor, 0.825*ZoomFactor);
+				--Number_X = 34;
+				--Label_X = 34;
+				--Label_Y = -43;
 			end
 	
 			if iCombo > 9999 then
-				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 0.66, 0.66 );
-				params.Zoom = clamp( params.Zoom, 0.66, 0.66 );
+				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 0.66*ZoomFactor, 0.66*ZoomFactor);
+				params.Zoom = clamp( params.Zoom, 0.66*ZoomFactor, 0.66*ZoomFactor);
+				--Number_X = -40;
+				--Label_X = 40;
+				--Label_Y = -47;
 			end
 	
 			if iCombo > 99999 then
-				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 0.55, 0.55 );
-				params.Zoom = clamp( params.Zoom, 0.55, 0.55 );
+				params.Zoom = scale( iCombo, 0, NumberMaxZoomAt, 0.55, 0.55);
+				params.Zoom = clamp( params.Zoom, 0.55, 0.55);
+				--Number_X = -45;
+				--Label_X = 45;
+				--Label_Y = -49;
 			end
 
+			--self:x(Number_X)
+			--label:x(Label_X)
+			--label:y(Label_Y)
+
 			-- Animate
+			self:y(-30)
 			Pulse(self, params)
 			--PulseLabelCommand(label, param)
 
+			-- DDRFIXME: Only works for one player I hypothesize??? The patterns laid out by other similar implementations
+			-- take the values of both first player and second player in a single array...
+			-- Marvelous combo
+			if LowerJudge==1 then
+				self:diffuse(color("#fffce0"))
+				self:glowshift();
+
+			-- Perfect combo
+			elseif LowerJudge==2 then
+				self:diffuse(color("#fff47a"))
+				self:glowshift();
+
+			-- Great combo
+			elseif LowerJudge==3 then
+				self:diffuse(color("#82ff80"))
+				self:glowshift();
+
+			-- Good combo
+			elseif LowerJudge==4 then
+				self:diffuse(color("#21cce8"))
+				self:glowshift();
+			end
+
 			--self:zoom(1.2):linear(0.05):zoom(1)
-			self:settext( params.Combo or params.Misses or "" )
+			self:settext( params.Combo .. " combo" or params.Misses or "" )
+		else
+			self:diffuseshift():effectperiod(0.8):playcommand("Color", params)
 		end
-		self:diffuseshift():effectperiod(0.8):playcommand("Color", params)
 	end,
 	ColorCommand=function(self, params)
 		-- Though this if/else chain may seem strange (why not reduce it to a single table for quick lookup?)

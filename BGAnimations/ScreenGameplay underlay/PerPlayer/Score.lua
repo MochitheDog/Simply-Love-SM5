@@ -4,6 +4,10 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NumPlayers = #GAMESTATE:GetHumanPlayers()
+
+-- For DDR scoring
+local tmp_Score = {0,0};
+local score = {0,0};
 -- -----------------------------------------------------------------------
 -- first, check for conditions where we might not draw the score actor at all
 
@@ -66,7 +70,6 @@ af[#af+1] = LoadActor("./ScoreBackground.lua", {alpha})
 
 af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 	Text="0.00",
-
 	Name=pn.."Score",
 	InitCommand=function(self)
 		self:valign(1):horizalign(right)
@@ -156,7 +159,47 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 			end
 		end
 	end,
-	JudgmentMessageCommand=function(self) self:queuecommand("RedrawScore") end,
+	JudgmentMessageCommand=function(self, params)
+		if SL.Global.GameMode ~= "DDR" then
+			self:queuecommand("RedrawScore")
+		else
+			local radar = GetDirectRadar(params.Player);
+			local w1 = pss:GetTapNoteScores('TapNoteScore_W1');
+			local w2 = pss:GetTapNoteScores('TapNoteScore_W2');
+			local w3 = pss:GetTapNoteScores('TapNoteScore_W3');
+			local hd = pss:GetHoldNoteScores('HoldNoteScore_Held');
+			local maxsteps = math.max(radar:GetValue('RadarCategory_TapsAndHolds')+radar:GetValue('RadarCategory_Holds')+radar:GetValue('RadarCategory_Rolls'),1);
+			pss:SetScore(math.round( (w1 + w2 + w3/2+hd)*100000/maxsteps-(w2 + w3))*10);
+
+			--wtf all these existing implementations are not working??? loool
+
+			--local radarValues = GetDirectRadar(params.Player);
+			--local totalItems = GetTotalItems(radarValues);	
+			--local p = (params.Player == 'PlayerNumber_P1') and 1 or 2;
+			--local stepScore = string.format("%1.3f",(1000000/totalItems));
+			
+			--if pss:GetScore() == 0 then
+			--	tmp_Score[p] = 0;
+			--	score[p] = 0;
+			--end;
+
+			--if params.HoldNoteScore == 'HoldNoteScore_Held' then
+			--	add = stepScore;
+			--elseif (params.HoldNoteScore == 'HoldNoteScore_LetGo') then
+			--	add = 0;
+			--else
+			--	add = oneStepScore[params.TapNoteScore];
+			--end
+
+			--tmp_Score[p] = tmp_Score[p] + add;
+			--score[p] = math.min(round(tmp_Score[p],-1),1000000);
+			--pss:SetScore(score[p]);
+			--pss:SetScore(4000)
+			--pss:SetScore(add)
+			
+			self:settext(pss:GetScore());
+		end
+	end,
 	RedrawScoreCommand=function(self)
 		dance_points = pss:GetPercentDancePoints()
 		percent = FormatPercentScore( dance_points ):sub(1,-2)

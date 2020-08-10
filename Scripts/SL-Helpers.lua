@@ -456,6 +456,12 @@ SetGameModePreferences = function()
 	if SL.Global.GameMode == "Casual" then
 		SL.Global.ActiveModifiers.TimingWindows = {true,true,true,false,false}
 
+	-- If we're switching to DDR mode,
+	-- we want to get rid of decents/almosts
+	-- since they don't exist in DDR anymore.
+	elseif SL.Global.GameMode == "DDR" then
+		SL.Global.ActiveModifiers.TimingWindows = {true,true,true,true,false}
+
 	-- Otherwise, we want all TimingWindows enabled by default.
 	else
  		SL.Global.ActiveModifiers.TimingWindows = {true,true,true,true,true}

@@ -236,7 +236,7 @@ SL = {
 			TimingWindowSecondsRoll=0.350000,
 		},
 		DDR = {
-			TimingWindowAdd=0.0000,
+			TimingWindowAdd=0.0015,
 			RegenComboAfterMiss=5,
 			MaxRegenComboAfterMiss=10,
 			MinTNSToHideNotes="TapNoteScore_W4",

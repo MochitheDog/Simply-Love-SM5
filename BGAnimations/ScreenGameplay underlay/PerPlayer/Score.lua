@@ -172,10 +172,7 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 			local maxsteps = math.max(radar:GetValue('RadarCategory_TapsAndHolds')+radar:GetValue('RadarCategory_Holds')+radar:GetValue('RadarCategory_Rolls'),1);
 			local sc = 1000000/maxsteps;
 
-			SCREENMAN:SystemMessage(math.round((sc * (w1 + hd)) + ((sc - 10) * w2) + (((.6*sc) - 10) * w3) + (((.2*sc) - 10) * w4) ));
-
 			pss:SetScore(math.round((sc * (w1 + hd)) + ((sc - 10) * w2) + (((.6*sc) - 10) * w3) + (((.2*sc) - 10) * w4) ));
-			
 			self:settext(pss:GetScore());
 		end
 	end,

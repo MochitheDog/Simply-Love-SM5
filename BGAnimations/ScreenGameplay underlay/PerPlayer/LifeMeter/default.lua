@@ -3,7 +3,7 @@ if SL[ToEnumShortString(player)].ActiveModifiers.HideLifebar then return end
 
 local lifemeter_actor
 
--- in ITG and FA+, we have the choice a "Standard" LifeMeter (at the top of the screen)
+-- in ITG/FA+/DDR, we have the choice a "Standard" LifeMeter (at the top of the screen)
 -- a "Surround" LifeMeter, which occupies the space behind the arrows,
 -- or a "Vertical" LifeMeter, which mimics the sizing and positioning used in ITG2.
 if SL.Global.GameMode == "ITG" or SL.Global.GameMode == "FA+" or SL.Global.GameMode == "DDR" then

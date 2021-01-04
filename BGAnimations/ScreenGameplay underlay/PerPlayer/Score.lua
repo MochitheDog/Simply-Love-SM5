@@ -4,6 +4,10 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NumPlayers = #GAMESTATE:GetHumanPlayers()
+
+-- For DDR scoring
+local tmp_Score = {0,0};
+local score = {0,0};
 -- -----------------------------------------------------------------------
 -- first, check for conditions where we might not draw the score actor at all
 
@@ -21,10 +25,21 @@ end
 
 local styletype = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 
-local pos = {
+-- DDRFIXME: removed local tag
+alpha = 0.00
+pos = {
 	[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=56 },
 	[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=56 },
 }
+
+if SL.Global.GameMode=="DDR" then
+	pos = {
+		[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=_screen.h-47 },
+		[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=_screen.h-47 },
+	}
+
+	alpha = 1.00
+end
 
 local dance_points, percent
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
@@ -49,9 +64,12 @@ local zoom_factor = clamp(scale(GetScreenAspectRatio(), 16/10, 16/9, ar_scale.si
 
 -- -----------------------------------------------------------------------
 
-return LoadFont("Wendy/_wendy monospace numbers")..{
-	Text="0.00",
+local af = Def.ActorFrame{}
 
+af[#af+1] = LoadActor("./ScoreBackground.lua", {alpha})
+
+af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
+	Text="0.00",
 	Name=pn.."Score",
 	InitCommand=function(self)
 		self:valign(1):horizalign(right)
@@ -141,10 +159,28 @@ return LoadFont("Wendy/_wendy monospace numbers")..{
 			end
 		end
 	end,
-	JudgmentMessageCommand=function(self) self:queuecommand("RedrawScore") end,
+	JudgmentMessageCommand=function(self, params)	
+		if SL.Global.GameMode ~= "DDR" then
+			self:queuecommand("RedrawScore")
+		else
+			local radar = GetDirectRadar(params.Player);
+			local w1 = pss:GetTapNoteScores('TapNoteScore_W1');
+			local w2 = pss:GetTapNoteScores('TapNoteScore_W2');
+			local w3 = pss:GetTapNoteScores('TapNoteScore_W3');
+			local w4 = pss:GetTapNoteScores('TapNoteScore_W4');
+			local hd = pss:GetHoldNoteScores('HoldNoteScore_Held');
+			local maxsteps = math.max(radar:GetValue('RadarCategory_TapsAndHolds')+radar:GetValue('RadarCategory_Holds')+radar:GetValue('RadarCategory_Rolls'),1);
+			local sc = 1000000/maxsteps;
+
+			pss:SetScore(math.round((sc * (w1 + hd)) + ((sc - 10) * w2) + (((.6*sc) - 10) * w3) + (((.2*sc) - 10) * w4) ));
+			self:settext(pss:GetScore());
+		end
+	end,
 	RedrawScoreCommand=function(self)
 		dance_points = pss:GetPercentDancePoints()
 		percent = FormatPercentScore( dance_points ):sub(1,-2)
 		self:settext(percent)
 	end
 }
+
+return af

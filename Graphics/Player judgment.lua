@@ -28,6 +28,36 @@ local TNSFrames = {
 	TapNoteScore_Miss = 5
 }
 
+local JudgeCmds = {
+	TapNoteScore_W1 = THEME:GetMetric( "Judgment", "JudgmentW1Command" );
+	TapNoteScore_W2 = THEME:GetMetric( "Judgment", "JudgmentW2Command" );
+	TapNoteScore_W3 = THEME:GetMetric( "Judgment", "JudgmentW3Command" );
+	TapNoteScore_W4 = THEME:GetMetric( "Judgment", "JudgmentW4Command" );
+	TapNoteScore_W5 = THEME:GetMetric( "Judgment", "JudgmentW5Command" );
+	TapNoteScore_Miss = THEME:GetMetric( "Judgment", "JudgmentMissCommand" );
+};
+
+local ProtimingCmds = {
+	TapNoteScore_W1 = THEME:GetMetric( "Protiming", "ProtimingW1Command" );
+	TapNoteScore_W2 = THEME:GetMetric( "Protiming", "ProtimingW2Command" );
+	TapNoteScore_W3 = THEME:GetMetric( "Protiming", "ProtimingW3Command" );
+	TapNoteScore_W4 = THEME:GetMetric( "Protiming", "ProtimingW4Command" );
+	TapNoteScore_W5 = THEME:GetMetric( "Protiming", "ProtimingW5Command" );
+	TapNoteScore_Miss = THEME:GetMetric( "Protiming", "ProtimingMissCommand" );
+};
+
+show_fast_slow = false
+if SL.Global.GameMode == "DDR" then
+	show_fast_slow = true
+--	if ReadPrefFromFile("UserPrefGameplayShowFastSlow") ~= nil then
+--		if GetUserPrefB("UserPrefGameplayShowFastSlow") then
+--			show_fast_slow = true;
+--		else
+--			show_fast_slow = false;
+--		end
+--	end
+end
+
 return Def.ActorFrame{
 	Name="Player Judgment",
 	InitCommand=function(self)
@@ -57,7 +87,14 @@ return Def.ActorFrame{
 
 		sprite:visible(true):setstate(frame)
 		-- this should match the custom JudgmentTween() from SL for 3.95
-		sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		-- DDRFIXME: Ideally we could have one file for overrides (like DDR overrides) and then
+		-- 			 have it take care of this logic instead of inserting it into the graphics script...
+		--           might be difficult to maintain later?
+		if SL.Global.GameMode ~= "DDR" then
+			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		else
+			JudgeCmds[param.TapNoteScore](sprite);
+		end
 	end,
 
 	Def.Sprite{
@@ -76,6 +113,12 @@ return Def.ActorFrame{
 			else
 				self:Load( THEME:GetPathG("", "_judgments/" .. mode .. "/" .. file_to_load) )
 			end
+
+			-- adjust height if DDR mode
+			-- DDRFIXME: what about reverse mode?
+			if SL.Global.GameMode == "DDR" then
+				self:y(-49);
+			end;
 		end,
 		ResetCommand=function(self) self:finishtweening():stopeffect():visible(false) end
 	}

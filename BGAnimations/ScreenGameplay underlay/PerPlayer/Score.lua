@@ -54,8 +54,7 @@ local ar_scale = {
 	sixteen_nine = 1
 }
 local zoom_factor = clamp(scale(GetScreenAspectRatio(), 16/10, 16/9, ar_scale.sixteen_ten, ar_scale.sixteen_nine), 0, 1.125)
-local test = 0
-local testr = 0
+
 -- -----------------------------------------------------------------------
 local scoreText = "0.00"
 if SL.Global.GameMode == "DDR" then
@@ -164,7 +163,6 @@ return LoadFont("Wendy/_wendy monospace numbers")..{
 		if SL.Global.GameMode ~= "DDR" then
 			self:queuecommand("RedrawScore")
 		else
-			--local radar = GetDirectRadar(params.Player)
 			local radar = GAMESTATE:GetCurrentSteps(params.Player):GetRadarValues(params.Player);
 			-- Basically copy-paste as how stepstatistics gets its numbers but repurposed for calculating money score
 			--  It's done this way because I tried pss:GetTapNoteScores but for some reason those don't start updating until the 
@@ -175,30 +173,26 @@ return LoadFont("Wendy/_wendy monospace numbers")..{
 
 				if params.TapNoteScore and ToEnumShortString(params.TapNoteScore) == window then
 					TapNoteJudgments[window] = TapNoteJudgments[window] + 1
-					-- test = test+1
+
 				end
 			end
 			local holds = 0
 
-			-- doesn't work
 			for index, RCType in ipairs(RadarCategories) do
 				if params.Player ~= player then return end
 				if not params.TapNoteScore then break end
 
 				if RCType=="Holds" and params.TapNote and params.TapNote:GetTapNoteSubType() == "TapNoteSubType_Hold" then
 					if params.HoldNoteScore == "HoldNoteScore_Held" then
-						-- testr = testr+1
 						RadarCategoryJudgments.Holds = RadarCategoryJudgments.Holds + 1
 					end
 
 				elseif RCType=="Rolls" and params.TapNote and params.TapNote:GetTapNoteSubType() == "TapNoteSubType_Roll" then
-					--testr = testr+1
 					if params.HoldNoteScore == "HoldNoteScore_Held" then
 					 	RadarCategoryJudgments.Rolls = RadarCategoryJudgments.Rolls + 1
 					end
 				end 
 				-- Get possible holds/rolls
-				-- WAIT I THINK STEPSTATISTICS DOESN'T HANDLE HOLDS PROPERLY EITHER IT COUNTS DROPPED HOLDS
 				local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
 				if StepsOrTrail then
 					local rv = StepsOrTrail:GetRadarValues(player)
@@ -208,14 +202,12 @@ return LoadFont("Wendy/_wendy monospace numbers")..{
 					holds = holds + possible_holds
 				end
 			end
-			---
 			local marv = TapNoteJudgments.W1
 			local perf = TapNoteJudgments.W2
 			local greats = TapNoteJudgments.W3
 			local goods = TapNoteJudgments.W4
 			local helds = RadarCategoryJudgments.Holds + RadarCategoryJudgments.Rolls
-			
-			--local holds = pss:GetRadarPossible():GetValue("RadarCategory_Holds") + pss:GetRadarPossible():GetValue("RadarCategory_Rolls")
+
 			local maxsteps = radar:GetValue('RadarCategory_TapsAndHolds')+holds
 			local sc = 1000000/maxsteps
 			local money_score = ((sc * (marv + helds)) + ((sc - 10) * perf) + (((.6*sc) - 10) * greats) + (((.2*sc) - 10) * goods) )

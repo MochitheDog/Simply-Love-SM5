@@ -7,19 +7,14 @@ local percent = FormatPercentScore(PercentDP)
 percent = percent:gsub("%%", "")
 local scoreDisplay = percent
 
--- TODO:/ Calculate money score if DDR mode
 if SL.Global.GameMode == "DDR" then
-	scoreDisplay = "poo"
 	local marvs = stats:GetTapNoteScores('TapNoteScore_W1')
 	local perfs = stats:GetTapNoteScores('TapNoteScore_W2')
 	local greats = stats:GetTapNoteScores('TapNoteScore_W3')
 	local goods = stats:GetTapNoteScores('TapNoteScore_W4')
-	local boos = stats:GetTapNoteScores('TapNoteScore_W5')
 	local misses = stats:GetTapNoteScores('TapNoteScore_Miss')
 	local oks = stats:GetRadarActual():GetValue("RadarCategory_Holds") + stats:GetRadarActual():GetValue("RadarCategory_Rolls")
-	--jumps count as 1 tap note
 	--Using DDRA scoring as detailed here: https://remywiki.com/DanceDanceRevolution_SuperNOVA2_Scoring_System
-	-- local notes = stats:GetRadarPossible():GetValue("RadarCategory_Notes")
 	local taps_n_holds = stats:GetRadarPossible():GetValue("RadarCategory_TapsAndHolds")
 	local total_holds = stats:GetRadarPossible():GetValue("RadarCategory_Holds") + stats:GetRadarPossible():GetValue("RadarCategory_Rolls")
 	local step_score = 1000000/(taps_n_holds + total_holds)

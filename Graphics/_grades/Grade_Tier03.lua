@@ -1,7 +1,7 @@
 local pss = ...
 
 if SL.Global.GameMode=="DDR" then
-    return LoadActor("./assets/aaa.png")..{ OnCommand=function(self) self:zoom(0.85) end }
+    return LoadActor("./assets/aa-plus.png")..{ OnCommand=function(self) self:zoom(0.85) end }
 end
 
 return Def.ActorFrame{

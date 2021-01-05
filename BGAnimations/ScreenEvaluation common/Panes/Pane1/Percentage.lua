@@ -19,11 +19,10 @@ if SL.Global.GameMode == "DDR" then
 	local total_holds = stats:GetRadarPossible():GetValue("RadarCategory_Holds") + stats:GetRadarPossible():GetValue("RadarCategory_Rolls")
 	local step_score = 1000000/(taps_n_holds + total_holds)
 	local money_score = (step_score * (marvs + oks)) + ((step_score-10)*perfs) + (((step_score*0.6)-10) * greats) + (((step_score*0.2)-10) * goods)
-	if money_score % 10 ~= 0 then
-		money_score = math.floor(money_score)
-		-- damn this feels janky- round down any decimals to nearest integer, change last digit to 0
-		money_score = tostring(money_score):sub(1,-2) .. "0"
-	end
+	money_score = math.floor(money_score)
+	-- damn this feels janky- round down any decimals to nearest integer, change last digit to 0
+	--money_score = tostring(money_score):sub(1,-2) .. "0"
+	money_score = money_score - (money_score % 10)
 	scoreDisplay = money_score
 	-- Can't accurately calculate score for shock arrows
 	--  so I guess we'll just ignore them like everyone else who tried implementing DDR money score

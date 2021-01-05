@@ -211,9 +211,9 @@ return LoadFont("Wendy/_wendy monospace numbers")..{
 			local maxsteps = radar:GetValue('RadarCategory_TapsAndHolds')+holds
 			local sc = 1000000/maxsteps
 			local money_score = ((sc * (marv + helds)) + ((sc - 10) * perf) + (((.6*sc) - 10) * greats) + (((.2*sc) - 10) * goods) )
-
 			money_score = math.floor(money_score)
-			-- I guess SetScore() GetScore() must handle making the last digit 0
+			-- Set last digit to 0
+			money_score = money_score - (money_score % 10)
 			pss:SetScore(money_score)
 			self:settext(pss:GetScore())
 		end

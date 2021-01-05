@@ -8,6 +8,10 @@ local NumPlayers = #GAMESTATE:GetHumanPlayers()
 -- For DDR scoring
 local tmp_Score = {0,0};
 local score = {0,0};
+local TapNoteScores = { 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' }
+local TapNoteJudgments = { W1=0, W2=0, W3=0, W4=0, W5=0, Miss=0 }
+local RadarCategories = { 'Holds', 'Rolls' }
+local RadarCategoryJudgments = { Holds=0, Rolls=0 }
 -- -----------------------------------------------------------------------
 -- first, check for conditions where we might not draw the score actor at all
 
@@ -25,21 +29,10 @@ end
 
 local styletype = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 
--- DDRFIXME: removed local tag
-alpha = 0.00
-pos = {
+local pos = {
 	[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=56 },
 	[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=56 },
 }
-
-if SL.Global.GameMode=="DDR" then
-	pos = {
-		[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=_screen.h-47 },
-		[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=_screen.h-47 },
-	}
-
-	alpha = 1.00
-end
 
 local dance_points, percent
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
@@ -61,19 +54,23 @@ local ar_scale = {
 	sixteen_nine = 1
 }
 local zoom_factor = clamp(scale(GetScreenAspectRatio(), 16/10, 16/9, ar_scale.sixteen_ten, ar_scale.sixteen_nine), 0, 1.125)
-
+local test = 0
+local testr = 0
 -- -----------------------------------------------------------------------
-
-local af = Def.ActorFrame{}
-
-af[#af+1] = LoadActor("./ScoreBackground.lua", {alpha})
-
-af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
-	Text="0.00",
+local scoreText = "0.00"
+if SL.Global.GameMode == "DDR" then
+	scoreText = "0"
+end
+return LoadFont("Wendy/_wendy monospace numbers")..{
+	Text=scoreText,
 	Name=pn.."Score",
 	InitCommand=function(self)
 		self:valign(1):horizalign(right)
-		self:zoom(0.5)
+		if SL.Global.GameMode ~= "DDR" then
+			self:zoom(0.5)
+		else
+			self:zoom(0.4)
+		end
 	end,
 
 	-- FIXME: this is out of control and points to the need for a generalized approach
@@ -85,7 +82,11 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 
 	BeginCommand=function(self)
 		-- assume "normal" score positioning first, but there are many reasons it will need to be moved
-		self:xy( pos[player].x, pos[player].y )
+		if SL.Global.GameMode ~= "DDR" then
+			self:xy( pos[player].x, pos[player].y )
+		else
+			self:xy( pos[player].x+20, pos[player].y )
+		end
 
 		if mods.NPSGraphAtTop and styletype ~= "OnePlayerTwoSides" then
 			-- if NPSGraphAtTop and Step Statistics and not double,
@@ -163,17 +164,66 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 		if SL.Global.GameMode ~= "DDR" then
 			self:queuecommand("RedrawScore")
 		else
-			local radar = GetDirectRadar(params.Player);
-			local w1 = pss:GetTapNoteScores('TapNoteScore_W1');
-			local w2 = pss:GetTapNoteScores('TapNoteScore_W2');
-			local w3 = pss:GetTapNoteScores('TapNoteScore_W3');
-			local w4 = pss:GetTapNoteScores('TapNoteScore_W4');
-			local hd = pss:GetHoldNoteScores('HoldNoteScore_Held');
-			local maxsteps = math.max(radar:GetValue('RadarCategory_TapsAndHolds')+radar:GetValue('RadarCategory_Holds')+radar:GetValue('RadarCategory_Rolls'),1);
-			local sc = 1000000/maxsteps;
+			--local radar = GetDirectRadar(params.Player)
+			local radar = GAMESTATE:GetCurrentSteps(params.Player):GetRadarValues(params.Player);
+			-- Basically copy-paste as how stepstatistics gets its numbers but repurposed for calculating money score
+			--  It's done this way because I tried pss:GetTapNoteScores but for some reason those don't start updating until the 
+			--  second note, resulting in incorrect score being displayed
+			for index, window in ipairs(TapNoteScores) do
+				if params.Player ~= player then return end
+				if params.HoldNoteScore then break end
 
-			pss:SetScore(math.round((sc * (w1 + hd)) + ((sc - 10) * w2) + (((.6*sc) - 10) * w3) + (((.2*sc) - 10) * w4) ));
-			self:settext(pss:GetScore());
+				if params.TapNoteScore and ToEnumShortString(params.TapNoteScore) == window then
+					TapNoteJudgments[window] = TapNoteJudgments[window] + 1
+					-- test = test+1
+				end
+			end
+			local holds = 0
+
+			-- doesn't work
+			for index, RCType in ipairs(RadarCategories) do
+				if params.Player ~= player then return end
+				if not params.TapNoteScore then break end
+
+				if RCType=="Holds" and params.TapNote and params.TapNote:GetTapNoteSubType() == "TapNoteSubType_Hold" then
+					if params.HoldNoteScore == "HoldNoteScore_Held" then
+						-- testr = testr+1
+						RadarCategoryJudgments.Holds = RadarCategoryJudgments.Holds + 1
+					end
+
+				elseif RCType=="Rolls" and params.TapNote and params.TapNote:GetTapNoteSubType() == "TapNoteSubType_Roll" then
+					--testr = testr+1
+					if params.HoldNoteScore == "HoldNoteScore_Held" then
+					 	RadarCategoryJudgments.Rolls = RadarCategoryJudgments.Rolls + 1
+					end
+				end 
+				-- Get possible holds/rolls
+				-- WAIT I THINK STEPSTATISTICS DOESN'T HANDLE HOLDS PROPERLY EITHER IT COUNTS DROPPED HOLDS
+				local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
+				if StepsOrTrail then
+					local rv = StepsOrTrail:GetRadarValues(player)
+					local possible_holds = rv:GetValue( RCType )
+					-- non-static courses (for example, "Most Played 1-4") will return -1 here
+					if possible_holds < 0 then possible_holds = 0 end
+					holds = holds + possible_holds
+				end
+			end
+			---
+			local marv = TapNoteJudgments.W1
+			local perf = TapNoteJudgments.W2
+			local greats = TapNoteJudgments.W3
+			local goods = TapNoteJudgments.W4
+			local helds = RadarCategoryJudgments.Holds + RadarCategoryJudgments.Rolls
+			
+			--local holds = pss:GetRadarPossible():GetValue("RadarCategory_Holds") + pss:GetRadarPossible():GetValue("RadarCategory_Rolls")
+			local maxsteps = radar:GetValue('RadarCategory_TapsAndHolds')+holds
+			local sc = 1000000/maxsteps
+			local money_score = ((sc * (marv + helds)) + ((sc - 10) * perf) + (((.6*sc) - 10) * greats) + (((.2*sc) - 10) * goods) )
+
+			money_score = math.floor(money_score)
+			-- I guess SetScore() GetScore() must handle making the last digit 0
+			pss:SetScore(money_score)
+			self:settext(pss:GetScore())
 		end
 	end,
 	RedrawScoreCommand=function(self)
@@ -182,5 +232,3 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 		self:settext(percent)
 	end
 }
-
-return af
